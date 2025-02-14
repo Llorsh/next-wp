@@ -158,6 +158,66 @@ export async function getPostBySlug(slug: string): Promise<Post> {
   return response[0];
 }
 
+
+export async function getAllVehicles(filterParams?: {
+  author?: string;
+  tag?: string;
+  category?: string;
+  search?: string;
+}): Promise<Post[]> {
+  const query: Record<string, any> = {
+    _embed: true,
+    per_page: 100,
+  };
+
+  if (filterParams?.search) {
+    // Search in post content and title
+    query.search = filterParams.search;
+
+    // If we have additional filters with search, use them
+    if (filterParams?.author) {
+      query.author = filterParams.author;
+    }
+    if (filterParams?.tag) {
+      query.tags = filterParams.tag;
+    }
+    if (filterParams?.category) {
+      query.categories = filterParams.category;
+    }
+  } else {
+    // If no search term, just apply filters
+    if (filterParams?.author) {
+      query.author = filterParams.author;
+    }
+    if (filterParams?.tag) {
+      query.tags = filterParams.tag;
+    }
+    if (filterParams?.category) {
+      query.categories = filterParams.category;
+    }
+  }
+
+  const url = getUrl("/wp-json/wp/v2/vehicles", query);
+  return wordpressFetch<Post[]>(url, {
+    next: {
+      ...defaultFetchOptions.next,
+      tags: ["wordpress", "vehicles"],
+    },
+  });
+}
+
+export async function getVehiclesBySlug(slug: string): Promise<Post> {
+  const url = getUrl("/wp-json/wp/v2/vehicles", { slug });
+  const response = await wordpressFetch<Post[]>(url, {
+    next: {
+      ...defaultFetchOptions.next,
+      tags: ["wordpress", `post-${slug}`],
+    },
+  });
+
+  return response[0];
+}
+
 export async function getAllCategories(): Promise<Category[]> {
   const url = getUrl("/wp-json/wp/v2/categories");
   const response = await wordpressFetch<Category[]>(url, {

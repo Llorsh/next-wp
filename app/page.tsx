@@ -178,6 +178,18 @@ const ToDelete = () => {
             </span>
           </span>
         </Link>
+        <Link
+          className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
+          href="/vehicles"
+        >
+          <Diamond size={32} />
+          <span>
+            Vehículos{" "}
+            <span className="block text-sm text-muted-foreground">
+            Vehículos from your WordPress
+            </span>
+          </span>
+        </Link>
         <a
           className="border h-48 bg-accent/50 rounded-lg p-4 flex flex-col justify-between hover:scale-[1.02] transition-all"
           href="https://github.com/9d8dev/next-wp/blob/main/README.md"

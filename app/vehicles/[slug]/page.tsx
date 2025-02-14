@@ -3,6 +3,7 @@ import {
   getFeaturedMediaById,
   getAuthorById,
   getCategoryById,
+  getVehiclesBySlug,
 } from "@/lib/wordpress";
 
 import { Section, Container, Article, Prose } from "@/components/craft";
@@ -39,7 +40,7 @@ export async function generateMetadata({
       title: post.title.rendered,
       description: description,
       type: "article",
-      url: `${siteConfig.site_domain}/posts/${post.slug}`,
+      url: `${siteConfig.site_domain}/vehicles/${post.slug}`,
       images: [
         {
           url: ogUrl.toString(),
@@ -64,16 +65,15 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = await getPostBySlug(slug);
-
+  const post = await getVehiclesBySlug(slug);
   const featuredMedia = post.featured_media ? await getFeaturedMediaById(post.featured_media) : null;
-  const author = await getAuthorById(post.author);
+  const author = post.author ? await getAuthorById(post.author) : null;
   const date = new Date(post.date).toLocaleDateString("en-US", {
     month: "long",
     day: "numeric",
     year: "numeric",
   });
-  const category = await getCategoryById(post.categories[0]);
+  const category = post.categories ? await getCategoryById(post.categories[0]) : null;
 
   return (
     <Section>
@@ -89,21 +89,21 @@ export default async function Page({
           <div className="flex justify-between items-center gap-4 text-sm mb-4">
             <h5>
               Published {date} by{" "}
-              {author.name && (
+              {author?.name && (
                 <span>
-                  <a href={`/posts/?author=${author.id}`}>{author.name}</a>{" "}
+                  <a href={`/vehicles/?author=${author?.id}`}>{author?.name}</a>{" "}
                 </span>
               )}
             </h5>
 
             <Link
-              href={`/posts/?category=${category.id}`}
+              href={`/vehicles/?category=${category?.id}`}
               className={cn(
                 badgeVariants({ variant: "outline" }),
                 "!no-underline"
               )}
             >
-              {category.name}
+              {category?.name}
             </Link>
           </div>
           {featuredMedia?.source_url && (

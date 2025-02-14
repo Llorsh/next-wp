@@ -1,11 +1,15 @@
 import type { NextConfig } from "next";
 
+// Definir variables de entorno
+const WORDPRESS_HOSTNAME = process.env.WORDPRESS_HOSTNAME || "";
+const WORDPRESS_URL = process.env.WORDPRESS_URL || "";
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: `${process.env.WORDPRESS_HOSTNAME}`,
+        hostname: WORDPRESS_HOSTNAME, // Usar la variable definida
         port: "",
         pathname: "/**",
       },
@@ -15,7 +19,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/admin",
-        destination: `${process.env.WORDPRESS_URL}/wp-admin`,
+        destination: `${WORDPRESS_URL}/wp-admin`, // Usar la variable definida
         permanent: true,
       },
     ];
